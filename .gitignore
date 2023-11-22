@@ -1,0 +1,5 @@
+*.log
+*.so
+Makefile.checker
+*.sh
+*.json

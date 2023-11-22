@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "so_stdio.h": "c",
+        "fcntl.h": "c",
+        "waitflags.h": "c"
+    },
+    "C_Cpp.default.compilerPath": "/usr/bin/gcc"
+}

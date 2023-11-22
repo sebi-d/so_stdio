@@ -1,0 +1,86 @@
+==9377== Memcheck, a memory error detector
+==9377== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==9377== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==9377== Command: _test/bin/test_popen_read ./_test/work/test_40
+==9377== Parent PID: 9373
+==9377== 
+==9377== Syscall param lseek(fd) contains uninitialised byte(s)
+==9377==    at 0x4983B0B: lseek (lseek64.c:36)
+==9377==    by 0x485C3B9: so_feof (in /home/sebi/so_stdio/libso_stdio.so)
+==9377==    by 0x109759: main (test_popen_read.c:79)
+==9377== 
+==9377== Conditional jump or move depends on uninitialised value(s)
+==9377==    at 0x1094F4: hook_read (test_popen_read.c:31)
+==9377==    by 0x485C89D: so_fread (in /home/sebi/so_stdio/libso_stdio.so)
+==9377==    by 0x109738: main (test_popen_read.c:80)
+==9377== 
+==9377== Syscall param read(fd) contains uninitialised byte(s)
+==9377==    at 0x49839D2: read (read.c:26)
+==9377==    by 0x10951B: hook_read (test_popen_read.c:34)
+==9377==    by 0x485C89D: so_fread (in /home/sebi/so_stdio/libso_stdio.so)
+==9377==    by 0x109738: main (test_popen_read.c:80)
+==9377== 
+==9377== 
+==9377== Process terminating with default action of signal 1 (SIGHUP)
+==9377==    at 0x49839D0: read (read.c:26)
+==9377==    by 0x10951B: hook_read (test_popen_read.c:34)
+==9377==    by 0x485C89D: so_fread (in /home/sebi/so_stdio/libso_stdio.so)
+==9377==    by 0x109738: main (test_popen_read.c:80)
+==9377== 
+==9377== HEAP SUMMARY:
+==9377==     in use at exit: 22,488 bytes in 4 blocks
+==9377==   total heap usage: 9 allocs, 5 frees, 28,576 bytes allocated
+==9377== 
+==9377== 56 bytes in 1 blocks are still reachable in loss record 1 of 4
+==9377==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==9377==    by 0x4003F51: malloc (rtld-malloc.h:56)
+==9377==    by 0x4003F51: _dl_map_object_deps (dl-deps.c:479)
+==9377==    by 0x400EA0E: dl_open_worker_begin (dl-open.c:592)
+==9377==    by 0x49E3C87: _dl_catch_exception (dl-error-skeleton.c:208)
+==9377==    by 0x400DF99: dl_open_worker (dl-open.c:782)
+==9377==    by 0x49E3C87: _dl_catch_exception (dl-error-skeleton.c:208)
+==9377==    by 0x400E34D: _dl_open (dl-open.c:883)
+==9377==    by 0x48FF63B: dlopen_doit (dlopen.c:56)
+==9377==    by 0x49E3C87: _dl_catch_exception (dl-error-skeleton.c:208)
+==9377==    by 0x49E3D52: _dl_catch_error (dl-error-skeleton.c:227)
+==9377==    by 0x48FF12D: _dlerror_run (dlerror.c:138)
+==9377==    by 0x48FF6C7: dlopen_implementation (dlopen.c:71)
+==9377==    by 0x48FF6C7: dlopen@@GLIBC_2.34 (dlopen.c:81)
+==9377== 
+==9377== 2,304 bytes in 1 blocks are possibly lost in loss record 2 of 4
+==9377==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==9377==    by 0x4005D97: malloc (rtld-malloc.h:56)
+==9377==    by 0x4005D97: _dlfo_mappings_segment_allocate (dl-find_object.c:217)
+==9377==    by 0x4005D97: _dl_find_object_update_1 (dl-find_object.c:671)
+==9377==    by 0x4005D97: _dl_find_object_update (dl-find_object.c:804)
+==9377==    by 0x400ECCF: dl_open_worker_begin (dl-open.c:735)
+==9377==    by 0x49E3C87: _dl_catch_exception (dl-error-skeleton.c:208)
+==9377==    by 0x400DF99: dl_open_worker (dl-open.c:782)
+==9377==    by 0x49E3C87: _dl_catch_exception (dl-error-skeleton.c:208)
+==9377==    by 0x400E34D: _dl_open (dl-open.c:883)
+==9377==    by 0x48FF63B: dlopen_doit (dlopen.c:56)
+==9377==    by 0x49E3C87: _dl_catch_exception (dl-error-skeleton.c:208)
+==9377==    by 0x49E3D52: _dl_catch_error (dl-error-skeleton.c:227)
+==9377==    by 0x48FF12D: _dlerror_run (dlerror.c:138)
+==9377==    by 0x48FF6C7: dlopen_implementation (dlopen.c:71)
+==9377==    by 0x48FF6C7: dlopen@@GLIBC_2.34 (dlopen.c:81)
+==9377== 
+==9377== 4,128 bytes in 1 blocks are still reachable in loss record 3 of 4
+==9377==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==9377==    by 0x485CE81: so_popen (in /home/sebi/so_stdio/libso_stdio.so)
+==9377==    by 0x1096A3: main (test_popen_read.c:71)
+==9377== 
+==9377== 16,000 bytes in 1 blocks are still reachable in loss record 4 of 4
+==9377==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==9377==    by 0x109562: main (test_popen_read.c:51)
+==9377== 
+==9377== LEAK SUMMARY:
+==9377==    definitely lost: 0 bytes in 0 blocks
+==9377==    indirectly lost: 0 bytes in 0 blocks
+==9377==      possibly lost: 2,304 bytes in 1 blocks
+==9377==    still reachable: 20,184 bytes in 3 blocks
+==9377==         suppressed: 0 bytes in 0 blocks
+==9377== 
+==9377== Use --track-origins=yes to see where uninitialised values come from
+==9377== For lists of detected and suppressed errors, rerun with: -s
+==9377== ERROR SUMMARY: 6 errors from 4 contexts (suppressed: 0 from 0)
