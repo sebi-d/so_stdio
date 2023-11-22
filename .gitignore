@@ -3,3 +3,4 @@
 Makefile.checker
 *.sh
 *.json
+_test/*
