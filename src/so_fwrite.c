@@ -1,45 +1,58 @@
 #include "so_stdio.h"
 #include <string.h>
+#include <fcntl.h>
+
+int min(int a, int b);
 
 size_t so_fwrite(const void *ptr, size_t size, size_t nmemb, SO_FILE *stream) {
+    size_t to_write = size * nmemb;
+    size_t _written = 0;
+    size_t _remaining = 0;
+
     if(stream == NULL) {
-        return SO_EOF;
+        return 0;
     }
-    size_t totalBytes = size * nmemb;
-    size_t bytesWritten = 0;
+    
+    if (so_ferror(stream)) {
+        return 0;
+    }
 
-    while(bytesWritten < totalBytes) {
-        size_t result = write(stream->_fileno, (char*)ptr + bytesWritten, totalBytes - bytesWritten);
+    //if append
+    // if((stream->_flags & O_APPEND) == O_APPEND) {
+    //     if(so_fseek(stream, 0, SEEK_END) < 0) {
+    //         return 0;
+    //     }
+    // }
 
-        if(stream->_index == BUFFER_SIZE) {
-            size_t result = read(stream->_fileno, stream->_buffer, BUFFER_SIZE);
+    //if +
+    // if(stream->_flags && O_RDWR == O_RDWR) {
+    //     if(stream->_io == READ) {
 
-            if(result > 0) {
-                stream->_index = 0;
-            } else if (result == 0) {
-                break;
-            } else {
-                stream->_errflag = 1;
-                const char* errorMessage = "Error writing to file\n";
-                write(2, errorMessage, sizeof(errorMessage) - 1);
-                return bytesWritten / size; 
+    //     }
+    // }
+
+    if(stream->_io == READ) {
+        if(so_fseek(stream , 0, SEEK_CUR) < 0) {
+            stream->_errflag = 1;
+            return 0;
+        }
+    }
+
+    while (_written < to_write) {
+        if (stream->_index == BUFFER_SIZE) {
+            if(so_fflush(stream) < 0) {
+                return 0;
             }
         }
-
-        size_t bytesToCopy = totalBytes - bytesWritten;
-        size_t bytesAvailable = BUFFER_SIZE - stream->_index;
-
-        if(bytesToCopy <= bytesAvailable) {
-            memcpy(stream->_buffer + stream->_index, (const char *)ptr + bytesWritten, bytesToCopy);
-            stream->_index += bytesToCopy;
-            bytesWritten += bytesToCopy;
-        } else {
-            
-            memcpy(stream->_buffer + stream->_index, (const char *)ptr + bytesWritten, bytesAvailable);
-            stream->_index += bytesAvailable;
-            bytesWritten += bytesAvailable;
-        }
+        _remaining = to_write - _written;
+        int to_copy = min(_remaining, BUFFER_SIZE - stream->_index);
+        memcpy(stream->_buffer, (char*)ptr + _written, to_copy);
+        
+        stream->_index += to_copy;
+        _written += to_copy;
+        stream->_offset += to_copy;
     }
 
-    return bytesWritten / size;
-}   
+    stream->_io = WRITE;
+    return _written / size;
+}

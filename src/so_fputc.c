@@ -6,21 +6,16 @@ int so_fputc(int c, SO_FILE *stream) {
         return SO_EOF;
     }
 
-    if (stream->_index == BUFFER_SIZE) {
-        ssize_t bytesWritten = write(stream->_fileno, stream->_buffer, BUFFER_SIZE);
+    stream->_buffer[stream->_index++] = (unsigned char)c;
 
-        if(bytesWritten < 0) {
-            stream->_errflag = 1;
-            const char* error_message = "error writing to file\n";
-            write(2, error_message, sizeof(error_message) - 1);
+    //full buffer
+    if(stream->_index == BUFFER_SIZE) {
+        if(so_fflush(stream) < 0) {
             return SO_EOF;
         }
-
-        stream->_index = 0;
     }
-
-    stream->_buffer[stream->_index++] = (char)c;
-
-    return c;
-
+    
+    stream->_io = WRITE;
+    stream->_offset++;
+    return (int)c;
 }

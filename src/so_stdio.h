@@ -21,14 +21,19 @@
 #define READ_END 0
 #define WRITE_END 1
 
+#define READ 0
+#define WRITE 1
+
 struct _so_file {
     int _fileno;
     int _flags;
-    char _buffer[BUFFER_SIZE];
+    char *_buffer;
     int _index;
     int _permissions;
     int _offset;
     int _errflag;
+    int _io;
+    int _eof;
     int pipe_fd[2];
 };
 

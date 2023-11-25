@@ -6,5 +6,5 @@ long so_ftell(SO_FILE *stream) {
         return SO_EOF;
     }
     
-    return (long)(stream->_index + stream->_offset);
+    return (long)(stream->_offset);
 }

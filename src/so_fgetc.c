@@ -7,18 +7,41 @@ int so_fgetc(SO_FILE *stream) {
         return SO_EOF;
     }
 
-    if(stream->_index == BUFFER_SIZE) {
-        size_t bytesRead = read(stream->_fileno, stream->_buffer, BUFFER_SIZE);
-        if(bytesRead > 0) {
-            stream->_index = 0;
-        } 
-        else {
-            stream->_errflag = 1;
-            const char* error_message = "error reading from file\n";
-            write(2, error_message, sizeof(error_message) - 1);
-            return SO_EOF;
+    if(stream->_io == WRITE) {
+        if(so_fflush(stream) < 0) {
+            return 0;
         }
     }
 
-    return (int)(stream->_buffer[stream->_index++]);
+    if (so_feof(stream) || so_ferror(stream)) {
+        return SO_EOF;
+    }
+
+    size_t _read = 0;
+    //if empty buffer | full buffer
+    if(stream->_index == 0 || stream->_index == BUFFER_SIZE) {
+        _read = read(stream->_fileno, stream->_buffer, BUFFER_SIZE);
+        if(_read == 0) {
+            stream->_eof = 1;
+            return SO_EOF;
+        }
+        
+        if(_read < 0) {
+            stream->_errflag = 1;
+            return SO_EOF;
+        }
+
+        stream->_index = 0;
+    }
+    
+    unsigned char c;
+    c = stream->_buffer[stream->_index];
+    if(c != 0) {
+        stream->_io = READ;
+        stream->_offset++;
+        stream->_index++;
+        return c;
+    }
+    stream->_eof = 1;
+    return SO_EOF;
 }

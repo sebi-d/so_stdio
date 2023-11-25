@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -Wall -fPIC -g
+CFLAGS := -Wall -fPIC
 SRC_DIR := src
 BUILD_DIR := build
 LIB_NAME := libso_stdio

@@ -2,11 +2,25 @@
 #include <string.h>
 
 int so_fclose(SO_FILE *stream){
+
     if(stream == NULL) {
         return SO_EOF;
     }
 
-    memset(stream->_buffer, 0, BUFFER_SIZE);
-    close(stream->_fileno);
+    if(stream->_io == WRITE) {
+        if(so_fflush(stream) < 0) {
+            return SO_EOF;
+        }
+    }
+
+    free(stream->_buffer);
+    
+    if(close(stream->_fileno) < 0) {
+        stream->_errflag = 1;
+        return SO_EOF;
+    }
+
+    free(stream);
+    
     return 0;
 }
