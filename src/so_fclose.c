@@ -9,18 +9,20 @@ int so_fclose(SO_FILE *stream){
 
     if(stream->_io == WRITE) {
         if(so_fflush(stream) < 0) {
+            if (stream->_buffer != NULL) {
+                free(stream->_buffer);
+            }
+            free(stream);
             return SO_EOF;
         }
     }
 
-    free(stream->_buffer);
-    
-    if(close(stream->_fileno) < 0) {
-        stream->_errflag = 1;
-        return SO_EOF;
-    }
+    int close_status = close(stream->_fileno);
 
+    if (stream->_buffer != NULL) {
+        free(stream->_buffer);
+    }
     free(stream);
-    
-    return 0;
+
+    return close_status;
 }

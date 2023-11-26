@@ -1,51 +1,54 @@
 #include "so_stdio.h"
 #include <sys/types.h>
+#include <string.h>
 
 SO_FILE *so_popen(const char *command, const char *type) {
-    // SO_FILE *new_file = (SO_FILE *)calloc(1, sizeof(SO_FILE));
-    // new_file->_fileno = -1;
-    // if (!new_file) {
-    //     return NULL;
-    // }
+    
+    int _fd = 0;
+    int pipe_fd[2];
+    if (pipe(pipe_fd) == -1) {
+        return NULL;
+    }
 
-    // if (pipe(new_file->pipe_fd) == -1) {
-    //     //failed to create pipe
-    //     free(new_file);
-    //     return NULL;
-    // }
+    pid_t pid = fork();
 
-    // pid_t pid = fork();
+    if (pid == -1) {
+        close(pipe_fd[READ_END]);
+        close(pipe_fd[WRITE_END]);
+        return NULL;
+    } else if (pid == 0) {
+        if(strcmp(type, "r") == 0) {
+            close(pipe_fd[READ_END]);
+			dup2(pipe_fd[WRITE_END], STDOUT_FILENO);
+			close(pipe_fd[WRITE_END]);
+        } else if (strcmp(type, "w") == 0) {
+            close(pipe_fd[WRITE_END]);
+			dup2(pipe_fd[READ_END], STDIN_FILENO);
+			close(pipe_fd[READ_END]);
+        }
+        execlp("/bin/sh", "sh", "-c", command, (char *)NULL);
+        exit(1);
+    } else {
+        if(strcmp(type, "r") == 0) 
+        {
+            close(pipe_fd[WRITE_END]);
+            _fd = pipe_fd[READ_END];
+        }
+        else 
+        { 
+            close(pipe_fd[READ_END]);
+            _fd = pipe_fd[WRITE_END];
+        }
 
-    // if (pid == -1) {
-    //     //perror("Failed to fork process");
-    //     close(new_file->pipe_fd[READ_END]);
-    //     close(new_file->pipe_fd[WRITE_END]);
-    //     so_pclose(new_file);
-    //     free(new_file);
-    //     return NULL;
-    // }
+	}
 
-    // if (pid == 0) { 
-        
-    //     close(new_file->pipe_fd[READ_END]);
-
-    //     dup2(new_file->pipe_fd[WRITE_END], STDOUT_FILENO);
-
-    //     close(new_file->pipe_fd[WRITE_END]);
-
-    //     execl("/bin/sh", "sh", "-c", command, (char *)NULL);
-
-    //     return SO_EOF;
-
-    // } else { 
-        
-    //     close(new_file->pipe_fd[WRITE_END]);
-
-    //     new_file->_errflag = 0;
-    //     new_file->_offset = 0;
-    //     new_file->_index = 0;
-
-    //     return new_file;
-    // }
-    return NULL;
+    SO_FILE *new_file = (SO_FILE *)calloc(1, sizeof(SO_FILE));
+    new_file->_fileno = _fd;
+    new_file->_pid = pid;
+    if (!new_file) {
+        return NULL;
+    }
+    new_file->_buffer = (char*) calloc (BUFFER_SIZE, sizeof(char));
+    
+    return new_file;
 }

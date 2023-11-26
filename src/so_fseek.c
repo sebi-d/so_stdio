@@ -11,12 +11,6 @@ int so_fseek(SO_FILE *stream, long offset, int whence) {
         }
     }
 
-    if(stream->_io == READ) {
-        //clean buffer
-        memset(stream->_buffer, 0, BUFFER_SIZE);
-        stream->_index = 0;
-    }
-
     if(whence != SEEK_SET && whence != SEEK_CUR && whence != SEEK_END) {
         stream->_errflag = 1;
         return SO_EOF;
@@ -27,6 +21,9 @@ int so_fseek(SO_FILE *stream, long offset, int whence) {
         stream->_errflag = 1;
         return SO_EOF;
     }
+
+    stream->_size = 0;
+    stream->_index = 0;
 
     return 0;
 }

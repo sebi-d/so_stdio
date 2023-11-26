@@ -29,12 +29,13 @@ struct _so_file {
     int _flags;
     char *_buffer;
     int _index;
+    int _size;
     int _permissions;
     int _offset;
     int _errflag;
     int _io;
     int _eof;
-    int pipe_fd[2];
+    int _pid;
 };
 
 typedef struct _so_file SO_FILE;

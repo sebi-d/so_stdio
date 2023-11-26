@@ -19,8 +19,10 @@ int so_fgetc(SO_FILE *stream) {
 
     size_t _read = 0;
     //if empty buffer | full buffer
-    if(stream->_index == 0 || stream->_index == BUFFER_SIZE) {
+    if(stream->_size == 0 || stream->_index == stream->_size) {
         _read = read(stream->_fileno, stream->_buffer, BUFFER_SIZE);
+        printf("read syscall\n");
+        printf("fileno %i\n", stream->_fileno);
         if(_read == 0) {
             stream->_eof = 1;
             return SO_EOF;
@@ -32,6 +34,7 @@ int so_fgetc(SO_FILE *stream) {
         }
 
         stream->_index = 0;
+        stream->_size = _read;
     }
     
     unsigned char c;

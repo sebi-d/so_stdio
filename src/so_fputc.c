@@ -6,10 +6,10 @@ int so_fputc(int c, SO_FILE *stream) {
         return SO_EOF;
     }
 
-    stream->_buffer[stream->_index++] = (unsigned char)c;
+    stream->_buffer[stream->_size++] = (unsigned char)c;
 
     //full buffer
-    if(stream->_index == BUFFER_SIZE) {
+    if(stream->_size == BUFFER_SIZE) {
         if(so_fflush(stream) < 0) {
             return SO_EOF;
         }
@@ -17,5 +17,6 @@ int so_fputc(int c, SO_FILE *stream) {
     
     stream->_io = WRITE;
     stream->_offset++;
+    stream->_index++;
     return (int)c;
 }
