@@ -50,6 +50,10 @@ size_t so_fread(void *ptr, size_t size, size_t nmemb, SO_FILE *stream) {
         }
         
         int to_copy = min(to_read - _read, stream->_size - stream->_index);
+        if(to_copy == -1) {
+            stream->_errflag = 1;
+            break;
+        }
         memcpy((char*)ptr + _read, stream->_buffer + stream->_index, to_copy);
         stream->_index += to_copy;
         _read += to_copy;
