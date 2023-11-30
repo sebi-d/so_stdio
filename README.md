@@ -2,48 +2,12 @@
 
 <p align="center" id="description">a function suite for the stdio library for Linux</p>
 
-<h2>𖥧 project structure</h2>
-so_stdio/
+<h2>𖥧 structure</h2>
 
- |	
- 
- |____src/____so_fclose.c
- 
- |	     |_____so_feof.c
- 
- |    	 |_____so_ferror.c
- 
- |    	 |_____so_fflush.c
- 
- |    	 |_____so_fgetc.c
- 
- |    	 |_____so_fileno.c
- 
- |	     |_____so_fopen.c
- 
- |	     |_____so_fputc.c
- 
- |    	 |_____so_fread.c
- 
- |    	 |_____so_fseek.c
- 
- |	     |_____so_ftell.c
- 
- |	     |_____so_fwrite.c
- 
- |	     |_____so_pclose.c
- 
- |	     |_____so_popen.c
- 
- |	     |_____so_stdio.h
- 
- |
- 
- |_____Makefile
- 
- |_____readme.md
+![image](https://github.com/sebi-d/so_stdio/assets/91790390/25968d27-6be8-4d57-ba20-b0bda6c428d3)
 
- 
+
+
 <h2>🧐 features</h2>
 
 *   perform efficient buffering input and output operations
