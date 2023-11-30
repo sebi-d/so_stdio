@@ -4,7 +4,8 @@
 
 <h2>𖥧 structure</h2>
 
-![image](https://github.com/sebi-d/so_stdio/assets/91790390/25968d27-6be8-4d57-ba20-b0bda6c428d3)
+![image](https://github.com/sebi-d/so_stdio/assets/91790390/8ce3608f-796b-4547-827d-8db02aa58da5)
+
 
 
 
